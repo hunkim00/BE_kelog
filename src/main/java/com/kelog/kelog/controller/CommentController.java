@@ -20,14 +20,14 @@ public class CommentController {
     public ResponseDto<?> createComment(@PathVariable Long postId,
                                         @RequestBody CommentRequestDto commentRequestDto,
                                         HttpServletRequest request ){
+        System.out.println("-------------------------------------");
         return commentService.createComment(postId,commentRequestDto,request);
     }
 
     //댓글 조회
     @GetMapping("/{postId}")
-    public List<ResponseDto<?> getComment(@PathVariable Long postId,
-                                 HttpServletRequest request ){
-        return commentService.getComment(postId,request);
+    public ResponseDto<?> getAllComment(@PathVariable Long postId){
+        return commentService.getAllComment(postId);
     }
 
     //댓글 수정
@@ -44,8 +44,5 @@ public class CommentController {
                                         HttpServletRequest request ){
         return commentService.deleteComment(commentId,request);
     }
-
-
-
 
 }
