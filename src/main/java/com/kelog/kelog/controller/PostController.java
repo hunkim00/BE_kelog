@@ -3,7 +3,7 @@ package com.kelog.kelog.controller;
 
 import com.kelog.kelog.request.PostRequestDto;
 import com.kelog.kelog.response.PostAllByMemberResponseDto;
-import com.kelog.kelog.response.PostResponseDto;
+import com.kelog.kelog.response.PostAllByResponseDto;
 import com.kelog.kelog.response.ResponseDto;
 import com.kelog.kelog.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -22,20 +22,21 @@ public class PostController {
 
     //게시글전체 (메인페이지)
     @GetMapping("")
-    public List<PostResponseDto> getAllPostings(@RequestParam("page") int page,
-                                                @RequestParam("size") int size){
+    public List<PostAllByResponseDto> getAllPost(
+                                            @RequestParam("page") int page,
+                                            @RequestParam("size") int size){
 
         return postService.getAllPost(page,size);
     }
     //게시글 해당 멤버 작성글 보기
     @GetMapping("/{memberId}")
-    public PostAllByMemberResponseDto getMemberPostings(
-            @PathVariable Long memberId,
+    public List<PostAllByResponseDto> getMemberPostings(
+            HttpServletRequest request,
             @RequestParam("page") int page,
             @RequestParam("size") int size){
 
 
-        return postService.getMemberPost(memberId, page, size);
+        return postService.getMemberPost(request, page, size);
     }
 
     //게시글 상세보기

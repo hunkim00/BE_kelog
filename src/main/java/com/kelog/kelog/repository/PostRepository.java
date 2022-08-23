@@ -14,11 +14,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     // 내 게시물 조회
     @Query("select DISTINCT p from Post p join fetch p.tags t join fetch p.member m  where p.member.id = :memberId")
-    List<Post> findAll(Long memberId);
+    List<Post> findAllByMyPage(Long memberId);
 
     // 전체조회
     @Query("select p from Post p join fetch p.member")
-    List<Post> findAllPaging(PageRequest createdAt);
+    List<Post> findAllByPaging(PageRequest createdAt);
+
 
     // 회원 게시물 조회
     @Query("select p from Post p " +
@@ -26,4 +27,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "where p.member.id = :memberId  "
              )
     List<Post> findAllMemberId(Long memberId, Pageable pageable);
+
 }
