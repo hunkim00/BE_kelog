@@ -19,9 +19,7 @@ import com.kelog.kelog.security.jwt.TokenProvider;
 import com.kelog.kelog.shared.CommonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.weaver.Lint;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -61,8 +59,8 @@ public class PostService{
     @Transactional
     public ResponseDto<?> createPost(MultipartFile multipartFile, PostRequestDto requestDto, HttpServletRequest request) throws IOException {
 
-        Member member = memberRepository.getReferenceById(1L);
-//      Member member = memberService.existMember(tokenProvider.getUserAccount(request));
+//        Member member = memberRepository.getReferenceById(1L);
+      Member member = memberService.existMember(tokenProvider.getUserAccount(request));
 
         String imgUrl = null;
 //        !multipartFile.isEmpty 쓸 때 오류!  빈값이 아닌 null 오면 오류 생김!
@@ -187,23 +185,27 @@ public class PostService{
     }
 
     //  내 게시물 전체 목록
-    public PostAllByMemberResponseDto getMemberPost(Long memberId, int page, int size) {
+    public List<PostAllByResponseDto> getMemberPost(HttpServletRequest request, int page, int size) {
 
-        Pageable pageable = PageRequest.of(page, size);
-
-        Member member = getMemberById(memberId);
-        MemberResponseDto memberResponseDto = new MemberResponseDto(member);
-
-        List<Post> findPostByMember = postRepository.findAllMemberId(memberId,pageable);
-
-        List<PostResponseDto> postResponseDto = findPostByMember
+//        Pageable pageable = PageRequest.of(page, size);
+//
+//        Member member = getMemberById(memberId);
+//        MemberResponseDto memberResponseDto = new MemberResponseDto(member);
+//
+//        List<Post> findPostByMember = postRepository.findAllMemberId(memberId,pageable);
+//
+//        List<PostResponseDto> postResponseDto = findPostByMember
+//                .stream()
+//                .map(PostResponseDto::new)
+//                .collect(toList());
+//
+//
+//        return new PostAllByMemberResponseDto(postResponseDto,memberResponseDto);
+        List<Post> postPaging = postRepository.findAllByMyPage(memberService.existMember(tokenProvider.getUserAccount(request)).getId());
+        return  postPaging
                 .stream()
-                .map(PostResponseDto::new)
+                .map(PostAllByResponseDto::new)
                 .collect(toList());
-
-
-        return new PostAllByMemberResponseDto(postResponseDto,memberResponseDto);
-
     }
 
     private List<Tags> getTag(Post post) {

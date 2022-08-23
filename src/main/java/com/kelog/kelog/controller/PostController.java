@@ -30,13 +30,13 @@ public class PostController {
     }
     //게시글 해당 멤버 작성글 보기
     @GetMapping("/{memberId}")
-    public PostAllByMemberResponseDto getMemberPostings(
-            @PathVariable Long memberId,
+    public List<PostAllByResponseDto> getMemberPostings(
+            HttpServletRequest request,
             @RequestParam("page") int page,
             @RequestParam("size") int size){
 
 
-        return postService.getMemberPost(memberId, page, size);
+        return postService.getMemberPost(request, page, size);
     }
 
     //게시글 상세보기
